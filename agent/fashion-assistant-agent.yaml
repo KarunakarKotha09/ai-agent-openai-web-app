@@ -34,6 +34,7 @@ instructions: |
 # Tool configuration
 tools:
   # OpenAPI Tool for Fashion Store API
+  # The spec_url points to the dynamic Swagger endpoint served by the deployed app
   - type: openapi
     name: fashion-store-api
     description: |

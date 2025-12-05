@@ -150,7 +150,9 @@ You can also create and manage AI agents directly from VS Code using the Microso
    - **Name**: `fashion-store-api`
    - **Description**: `This tool is used to interact with and manage an online fashion store. The tool can add or remove items from a shopping cart as well as view inventory.`
    - **Authentication**: Anonymous
-   - **OpenAPI Spec**: Copy content from [`src/webapp/swagger.json`](./src/webapp/swagger.json) and replace `<APP-SERVICE-URL>` with your deployed app URL
+   - **OpenAPI Spec**: Copy content from [`src/webapp/swagger.json`](./src/webapp/swagger.json) and replace `<APP-SERVICE-URL>` with your deployed app URL (e.g., `https://your-app.azurewebsites.net`)
+
+   > **Note**: The static file [`src/webapp/swagger.json`](./src/webapp/swagger.json) is provided for reference. When deployed, the app also serves the OpenAPI spec dynamically at `<APP-SERVICE-URL>/swagger/v1/swagger.json`.
 
 4. Select **Create tool**.
 
