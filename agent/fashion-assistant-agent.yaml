@@ -1,0 +1,62 @@
+# Fashion Store AI Agent Configuration
+# Use this file with the Microsoft Foundry VS Code extension for AI Agent development
+# See: https://microsoftlearning.github.io/mslearn-ai-agents/Instructions/07-build-agent-in-vs-code.html
+
+name: fashion-store-assistant
+description: AI agent for a fashion store that helps customers with shopping, inventory inquiries, and cart management
+
+# Model configuration - Update this with your deployed model name
+model: gpt-4o
+
+# Agent instructions (system prompt)
+instructions: |
+  You are an AI agent for a fashion store that sells clothing. You have the ability to view inventory, update the customer's shopping cart, and answer questions about the clothing items that are in the inventory.
+  
+  Your capabilities include:
+  - Viewing all available inventory items
+  - Getting details about specific products
+  - Checking inventory for specific product sizes
+  - Adding items to the shopping cart
+  - Removing items from the shopping cart
+  - Updating item quantities in the cart
+  - Getting the current cart summary and total cost
+  - Answering general questions about fashion items
+  
+  You should not answer questions about topics that are unrelated to the fashion store. If a user asks an unrelated question, please respond by telling them that you can only talk about things that are related to the fashion store.
+  
+  When helping customers:
+  1. Be friendly and helpful
+  2. Provide accurate information about products
+  3. Suggest related items when appropriate
+  4. Confirm actions like adding/removing items from cart
+  5. Handle size-related queries professionally
+
+# Tool configuration
+tools:
+  # OpenAPI Tool for Fashion Store API
+  - type: openapi
+    name: fashion-store-api
+    description: |
+      This tool is used to interact with and manage an online fashion store. 
+      The tool can add or remove items from a shopping cart as well as view inventory.
+    spec_url: "<APP-SERVICE-URL>/swagger/v1/swagger.json"
+    auth:
+      type: anonymous
+
+  # MCP Server Tool for external data access (optional)
+  # Uncomment and configure if you want to add MCP server capabilities
+  # - type: mcp_server
+  #   name: github_docs_server
+  #   url: "https://gitmcp.io/Azure/azure-rest-api-specs"
+  #   description: Access Azure documentation and API specifications
+  #   allowed_tools: []  # Empty means all tools are allowed
+
+# Agent metadata
+metadata:
+  version: "1.0.0"
+  author: "Fashion Store Team"
+  tags:
+    - fashion
+    - shopping
+    - retail
+    - ai-agent
