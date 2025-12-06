@@ -55,6 +55,10 @@ This command can take up to 10 minutes to run. At this point, once deployment is
 
 ## Create the AI Agent
 
+You have two options to create the AI Agent: using the **Azure AI Foundry Portal** or using the **Microsoft Foundry VS Code Extension**. Choose the approach that best fits your workflow.
+
+### Option 1: Create Agent via Azure AI Foundry Portal
+
 You now create the AI Agent that your app uses. The Azure AI Foundry resources were created as part of the azd template. You need to create the agent and connect that agent to your App Service.
 
 1. Sign in to the [Azure portal](https://portal.azure.com) and go to the resource group that was created by the azd template.
@@ -102,6 +106,90 @@ After setting up the AI Agent and adding the OpenAPI Specified Tool, you need to
   - **Value**: The Agent ID you noted when creating your agent
 7. Click **Apply** at the bottom of the page and confirm when prompted.
 8. The app will restart with the new settings applied.
+
+### Option 2: Create Agent via Microsoft Foundry VS Code Extension
+
+You can also create and manage AI agents directly from VS Code using the Microsoft Foundry extension. This approach provides a visual designer interface and is ideal for development workflows. For the complete guide, see [Develop an AI agent with VS Code extension](https://microsoftlearning.github.io/mslearn-ai-agents/Instructions/07-build-agent-in-vs-code.html).
+
+#### Prerequisites for VS Code Development
+
+1. Install [Visual Studio Code](https://code.visualstudio.com/)
+2. Install the **Microsoft Foundry** extension from the VS Code marketplace (or open this repo in a GitHub Codespace which has it pre-configured)
+
+#### Sign in to Azure and Create a Project
+
+1. In the VS Code sidebar, select the **Microsoft Foundry** extension icon.
+2. In the Resources view, select **Sign in to Azure...** and follow the authentication prompts.
+3. Create a new Foundry project by selecting the **+** (plus) icon next to **Resources**.
+4. Select your Azure subscription and resource group.
+5. Enter a name for your Foundry project and wait for deployment.
+
+#### Deploy a Model
+
+1. When the "Project deployed successfully" popup appears, select **Deploy a model**.
+2. In the Model Catalog, locate and deploy the **gpt-4o** model.
+3. Configure deployment settings (use **Global Standard** or **Standard** deployment type).
+
+#### Create the Agent Using the Designer
+
+1. In the Microsoft Foundry extension view, find the **Resources** section.
+2. Select the **+** icon next to **Declarative Agents** to create a new AI Agent.
+3. Choose a location to save your agent files (the `agent` folder in this repo contains a sample configuration).
+4. Configure your agent in the designer:
+   - **Name**: `fashion-store-assistant`
+   - **Model**: Select your GPT-4o deployment
+   - **Instructions**: Use the instructions from [`agent/fashion-assistant-agent.yaml`](./agent/fashion-assistant-agent.yaml)
+
+5. Save the configuration.
+
+#### Add the OpenAPI Tool to Your Agent
+
+1. In the **TOOL** section of the designer, select **Add tool**.
+2. Choose **OpenAPI 3.0 specified tool**.
+3. Configure the tool:
+   - **Name**: `fashion-store-api`
+   - **Description**: `This tool is used to interact with and manage an online fashion store. The tool can add or remove items from a shopping cart as well as view inventory.`
+   - **Authentication**: Anonymous
+   - **OpenAPI Spec**: Copy content from [`src/webapp/swagger.json`](./src/webapp/swagger.json) and replace `<APP-SERVICE-URL>` with your deployed app URL (e.g., `https://your-app.azurewebsites.net`)
+
+   > **Note**: The static file [`src/webapp/swagger.json`](./src/webapp/swagger.json) is provided for reference. When deployed, the app also serves the OpenAPI spec dynamically at `<APP-SERVICE-URL>/swagger/v1/swagger.json`.
+
+4. Select **Create tool**.
+
+#### Add an MCP Server Tool (Optional)
+
+For enhanced capabilities, you can add Model Context Protocol (MCP) server tools:
+
+1. In the **TOOL** section, select **Add tool** > **MCP Server**.
+2. Configure the MCP Server:
+   - **Server URL**: e.g., `https://gitmcp.io/Azure/azure-rest-api-specs`
+   - **Server Label**: e.g., `github_docs_server`
+3. Leave **Allowed tools** empty to allow all tools.
+4. Select **Create tool**.
+
+#### Deploy and Test Your Agent
+
+1. Select **Create Agent on Microsoft Foundry** in the agent designer.
+2. After deployment, right-click on your agent in the **Declarative Agents** section.
+3. Select **Open Playground** to test your agent.
+4. Try prompts like:
+   - "What items are in inventory?"
+   - "Add a medium blazer to my cart"
+   - "What's the total cost of my cart?"
+
+#### Generate Sample Code
+
+1. Right-click on your deployed agent and select **Open Code File**.
+2. Choose your preferred SDK (Python, .NET, JavaScript, or Java).
+3. Review the generated code for programmatic agent interaction.
+
+#### Update App Service Environment Variables
+
+After creating your agent in VS Code, update your App Service with the agent configuration:
+
+1. Note the Agent ID from your deployed agent (format: `asst_<unique-id>`).
+2. Get the project connection string from the Overview page.
+3. Add environment variables to your App Service as described in Option 1.
 
 ## Use the app
 
@@ -176,6 +264,68 @@ Beyond basic interactions, the AI agent can handle more complex scenarios:
 - **Shopping Cart Management**: "Remove the large shirt and add a medium instead"
 - **Inventory Checks**: "Do you have any red shirts in medium?"
 - **Price Inquiries**: "What's the price range for blazers?"
+
+## Holiday Readiness 2025 Agent
+
+This repository also includes a configuration for the **Holiday Readiness 2025** agent, a proactive orchestration assistant for peak season operations. See [`agent/holiday-readiness-2025-agent.yaml`](./agent/holiday-readiness-2025-agent.yaml) for the full configuration.
+
+### Agent Overview
+
+The Holiday Readiness 2025 agent helps ACE teams (Retail, Airlines, Healthcare) maintain service excellence during high-demand periods with the following capabilities:
+
+| Capability | Description |
+|------------|-------------|
+| **Proactive Risk Mitigation** | Identify critical services, workloads, and dependencies; alert teams before incidents |
+| **Operational Intelligence** | Aggregate calendars, freeze periods, stress test schedules, and events |
+| **Incident Response Acceleration** | Automate escalation workflows, provide runbooks, integrate with ICM |
+| **Knowledge Democratization** | Surface wikis, BCDR details, and dashboards for V-teams |
+| **Cross-Team Coordination** | Sync OOF plans, backup rosters, and communication channels |
+| **Customer Context Awareness** | Pull subscription IDs, DR regions, workloads, and criticality |
+
+### Data Sources & APIs
+
+The agent integrates with:
+
+- **Azure Monitor & Log Analytics** - Telemetry and service health monitoring
+- **Microsoft Graph API** - Calendar, OOF detection, and roster management
+- **ICM APIs** - Incident management and escalation workflows
+- **Global Holiday Calendar API** - Public holiday data across regions
+- **MCP Server** - SharePoint access for enterprise documents and wikis
+
+### Creating the Holiday Readiness Agent
+
+1. Open VS Code with the Microsoft Foundry extension
+2. Create a new Declarative Agent
+3. Use the configuration from [`agent/holiday-readiness-2025-agent.yaml`](./agent/holiday-readiness-2025-agent.yaml)
+4. Configure the tools with your actual API endpoints:
+   - Replace `<AZURE-MONITOR-API-URL>` with your Azure Monitor endpoint
+   - Replace `<MCP-SERVER-URL>` with your MCP server endpoint
+   - Configure OAuth2 for Microsoft Graph API
+5. Deploy the agent to Microsoft Foundry
+
+### Example Interactions
+
+```
+User: "What's the status of Airlines V-team readiness?"
+Agent: "Airlines V-team Holiday Readiness Status:
+- ✅ Freeze period defined: Dec 20 - Jan 2
+- ✅ Stress tests completed: 12/15
+- ⚠️ 2 team members OOF Dec 24-26 without backup assigned
+- 📋 Action Required: Assign backup for [names]
+
+Would you like me to pull the full roster or escalation contacts?"
+```
+
+```
+User: "Show me critical workloads for Retail customers"
+Agent: "Retail Critical Workloads Summary:
+| Customer | Subscription | Workload | DR Region | Criticality |
+|----------|--------------|----------|-----------|-------------|
+| Contoso  | sub-123      | Databricks | East US 2 | Tier 1     |
+| Fabrikam | sub-456      | AKS Cluster | West US  | Tier 1     |
+
+Would you like detailed BCDR plans for any of these?"
+```
 
 ## Security Considerations
 
