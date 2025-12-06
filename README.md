@@ -265,6 +265,68 @@ Beyond basic interactions, the AI agent can handle more complex scenarios:
 - **Inventory Checks**: "Do you have any red shirts in medium?"
 - **Price Inquiries**: "What's the price range for blazers?"
 
+## Holiday Readiness 2025 Agent
+
+This repository also includes a configuration for the **Holiday Readiness 2025** agent, a proactive orchestration assistant for peak season operations. See [`agent/holiday-readiness-2025-agent.yaml`](./agent/holiday-readiness-2025-agent.yaml) for the full configuration.
+
+### Agent Overview
+
+The Holiday Readiness 2025 agent helps ACE teams (Retail, Airlines, Healthcare) maintain service excellence during high-demand periods with the following capabilities:
+
+| Capability | Description |
+|------------|-------------|
+| **Proactive Risk Mitigation** | Identify critical services, workloads, and dependencies; alert teams before incidents |
+| **Operational Intelligence** | Aggregate calendars, freeze periods, stress test schedules, and events |
+| **Incident Response Acceleration** | Automate escalation workflows, provide runbooks, integrate with ICM |
+| **Knowledge Democratization** | Surface wikis, BCDR details, and dashboards for V-teams |
+| **Cross-Team Coordination** | Sync OOF plans, backup rosters, and communication channels |
+| **Customer Context Awareness** | Pull subscription IDs, DR regions, workloads, and criticality |
+
+### Data Sources & APIs
+
+The agent integrates with:
+
+- **Azure Monitor & Log Analytics** - Telemetry and service health monitoring
+- **Microsoft Graph API** - Calendar, OOF detection, and roster management
+- **ICM APIs** - Incident management and escalation workflows
+- **Global Holiday Calendar API** - Public holiday data across regions
+- **MCP Server** - SharePoint access for enterprise documents and wikis
+
+### Creating the Holiday Readiness Agent
+
+1. Open VS Code with the Microsoft Foundry extension
+2. Create a new Declarative Agent
+3. Use the configuration from [`agent/holiday-readiness-2025-agent.yaml`](./agent/holiday-readiness-2025-agent.yaml)
+4. Configure the tools with your actual API endpoints:
+   - Replace `<AZURE-MONITOR-API-URL>` with your Azure Monitor endpoint
+   - Replace `<MCP-SERVER-URL>` with your MCP server endpoint
+   - Configure OAuth2 for Microsoft Graph API
+5. Deploy the agent to Microsoft Foundry
+
+### Example Interactions
+
+```
+User: "What's the status of Airlines V-team readiness?"
+Agent: "Airlines V-team Holiday Readiness Status:
+- ✅ Freeze period defined: Dec 20 - Jan 2
+- ✅ Stress tests completed: 12/15
+- ⚠️ 2 team members OOF Dec 24-26 without backup assigned
+- 📋 Action Required: Assign backup for [names]
+
+Would you like me to pull the full roster or escalation contacts?"
+```
+
+```
+User: "Show me critical workloads for Retail customers"
+Agent: "Retail Critical Workloads Summary:
+| Customer | Subscription | Workload | DR Region | Criticality |
+|----------|--------------|----------|-----------|-------------|
+| Contoso  | sub-123      | Databricks | East US 2 | Tier 1     |
+| Fabrikam | sub-456      | AKS Cluster | West US  | Tier 1     |
+
+Would you like detailed BCDR plans for any of these?"
+```
+
 ## Security Considerations
 
 - The application uses Azure managed identities for secure authentication to Azure AI Agent Service in production environments.
